@@ -1,4 +1,19 @@
-Dsn="root:unsafe@/td_ohlc?charset=utf8mb4,utf8"
+# BGWorker
+# Simple daemon to run cronjobs from the webbrowser
+
+# MySQL connection details
+# See https://github.com/Go-SQL-Driver/MySQL/#dsn-data-source-name
+Dsn="user:pass@/database?charset=utf8mb4,utf8"
+
+# HTTP IP:port to listen on
 Listen="127.0.0.1:8009"
+
+# Path where scripts are located that the API is allowed to run
+# Note: The file in given dir is directly called so be sure to
+# set the execution-flag (chmod +x file.sh) and set the shebang for scripting-files (i.e. #!/bin/bash)
 Scriptd="./script.d"
+
+# Size of queue before dropping
 QueueSize=10
+
+# TODO: WorkerSize=10
