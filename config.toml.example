@@ -1,0 +1,4 @@
+Dsn="root:unsafe@/td_ohlc?charset=utf8mb4,utf8"
+Listen="127.0.0.1:8009"
+Scriptd="./script.d"
+QueueSize=10

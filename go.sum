@@ -1,0 +1,12 @@
+github.com/BurntSushi/toml v1.2.1 h1:9F2/+DoOYIOksmaJFPw1tGFy1eDnIJXg+UHjuD8lTak=
+github.com/BurntSushi/toml v1.2.1/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
+github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf h1:iW4rZ826su+pqaw19uhpSCzhj44qo35pNgKFGqzDKkU=
+github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf/go.mod h1:F5haX7vjVVG0kc13fIWeqUViNPyEJxv/OmvnBo0Yme4=
+github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
+github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
+github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da h1:oI5xCqsCo564l8iNU+DwB5epxmsaqB+rhGL0m5jtYqE=
+github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
+github.com/itshosted/mcore v0.0.0-20151215094434-9aa9c3bf18f3 h1:K4Pz2MOoq4zjXpAqF0jgEPzO1/GW19i1/OMCHn7+F+4=
+github.com/itshosted/mcore v0.0.0-20151215094434-9aa9c3bf18f3/go.mod h1:XClchGRh4h9Ndghvsi29p1YNeLCLXts6p4xVdrd9aXc=
+github.com/itshosted/webutils v0.0.0-20170612142013-a5ff3b14b30a h1:rbTt7xvW1B29vLv3YhOQd8n3OBJkkA0IJfVQNBZVX1Y=
+github.com/itshosted/webutils v0.0.0-20170612142013-a5ff3b14b30a/go.mod h1:L7W+avYvcnQ7x2X4db+8LTnmqoWzCD28SROXge+LlIM=
