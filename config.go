@@ -52,7 +52,7 @@ func DBInit(ctx context.Context, driver string, dsn string) error {
 	// Force MySQL into strict mode
 	_, e = DB.ExecContext(ctx, `SET SESSION sql_mode = 'TRADITIONAL,NO_AUTO_VALUE_ON_ZERO,NO_BACKSLASH_ESCAPES'`)
 
-	DB.SetMaxIdleConns(10)
+	DB.SetMaxIdleConns(0)
 	DB.SetMaxOpenConns(10)
 	DB.SetConnMaxLifetime(0)
 
