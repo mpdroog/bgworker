@@ -7,6 +7,7 @@ import (
 	"github.com/itshosted/webutils/ratelimit"
 
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"net"
@@ -19,8 +20,13 @@ import (
 
 type ScriptJob struct {
 	File string
-	Arg  string
+	Args []string
 	Id   int64
+}
+
+type Status struct {
+	Status string `json:"status"`
+	Stdout string `json:"stdout"`
 }
 
 var (
@@ -60,13 +66,13 @@ func httpQueueAdd(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(400)
 		fmt.Printf("CRIT: httpScript got invalid file-pattern e=%s\n", e.Error())
-		if _, e := w.Write([]byte(`{"error": "arg invalid"}`)); e != nil {
+		if _, e := w.Write([]byte(`{"error": "file invalid"}`)); e != nil {
 			fmt.Printf("httpScript write e=%s\n", e.Error())
 		}
 		return
 	}
 
-	for _, arg := range strings.SplitN(args, ",", 100) {
+	/* todo?? validating tickers here.. for _, arg := range strings.SplitN(args, ",", 100) {
 		if e := Validate("ticker", arg); e != nil {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(400)
@@ -76,7 +82,7 @@ func httpQueueAdd(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-	}
+	}*/
 
 	if _, e := os.Stat(C.Scriptd + file); os.IsNotExist(e) {
 		w.Header().Set("Content-Type", "application/json")
@@ -111,7 +117,7 @@ func httpQueueAdd(w http.ResponseWriter, r *http.Request) {
 
 	scriptQueue <- ScriptJob{
 		File: file,
-		Arg:  args,
+		Args: strings.SplitN(args, ",", 100),
 		Id:   id,
 	}
 
@@ -135,7 +141,7 @@ func httpQueueStatus(w http.ResponseWriter, r *http.Request) {
 	}
 
 	state := ""
-	status, e := QueueStatus(id)
+	status, stdout, e := QueueStatus(id)
 	if e == ErrNoRows {
 		state = "NOTFOUND"
 		e = nil
@@ -159,8 +165,14 @@ func httpQueueStatus(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	s := Status{
+		Status: state,
+		Stdout: stdout,
+	}
+	enc := json.NewEncoder(w)
+
 	w.Header().Set("Content-Type", "application/json")
-	if _, e := w.Write([]byte(fmt.Sprintf(`{"status": "%s"}`, state))); e != nil {
+	if e := enc.Encode(s); e != nil {
 		fmt.Printf("httpQueueStatus: " + e.Error())
 	}
 }
@@ -190,7 +202,7 @@ func main() {
 	mux.Title = "Queued-API"
 	mux.Desc = "Async processing with privilege separation."
 	mux.Add("/", doc, "This documentation")
-	mux.Add("/queue/add", httpQueueAdd, "Run script, ?file=FILENAME&arg=CLI-ARGS")
+	mux.Add("/queue/add", httpQueueAdd, "Run script, ?file=FILENAME&args=CLI-ARGS")
 	mux.Add("/queue/status", httpQueueStatus, "Get status by ?id=UUID_FROM_ADD")
 
 	middleware.Add(ratelimit.Use(5, 5))
@@ -200,13 +212,15 @@ func main() {
 	go func() {
 		for {
 			req := <-scriptQueue
-			ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+			// TODO: Move to config?
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+			defer cancel()
 
 			if Verbose {
 				fmt.Printf("script.d req=%+v\n", req)
 			}
 
-			cmd := exec.CommandContext(ctx, C.Scriptd+req.File, req.Arg)
+			cmd := exec.CommandContext(ctx, C.Scriptd+req.File, req.Args...)
 			out, e := cmd.CombinedOutput()
 			if e != nil {
 				fmt.Printf("cmd.Run() failed with e=%s, stdout/stderr:\n%s\n", e.Error(), out)
@@ -219,8 +233,6 @@ func main() {
 			if e := QueueUpdate(ctx, req.Id, status, out); e != nil {
 				fmt.Printf("cmd.QueueUpdate e=%s\n", e.Error())
 			}
-
-			cancel()
 		}
 	}()
 

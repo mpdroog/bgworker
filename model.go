@@ -31,7 +31,7 @@ func QueueUpdate(ctx context.Context, id int64, status int, output []byte) (e er
 	return
 }
 
-func QueueStatus(id string) (state int, e error) {
-	e = DB.QueryRow("SELECT `status` FROM queue WHERE id = ?", id).Scan(&state)
+func QueueStatus(id string) (state int, output string, e error) {
+	e = DB.QueryRow("SELECT `status`, `output` FROM queue WHERE id = ?", id).Scan(&state, &output)
 	return
 }

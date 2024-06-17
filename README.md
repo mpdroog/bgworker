@@ -12,8 +12,8 @@ How does it work?
 ===================
 > DevNote: Don't forget to properly urlescape the arguments for file and arg ;)
 
-- HTTP call to `/queue/add` with `?file=coolscript.sh&arg=-write` -> returns JSON `{id:"uniqueidforscriptbeingrun"}`e;
-- If you want to keep track, keep polling `/queue/status?id=<ID>` -> return JSON `{status:"PENDING|DONE|ERROR"}` 
+- HTTP call to `/queue/add` with `?file=coolscript.sh&args=-write` -> returns JSON `{id:"uniqueidforscriptbeingrun"}`e;
+- If you want to keep track, keep polling `/queue/status?id=<ID>` -> return JSON `{status:"PENDING|DONE|ERROR", stdout:"output in stdout and stderr"}` 
 
 TODO
 ==================
