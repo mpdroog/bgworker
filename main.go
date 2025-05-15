@@ -147,10 +147,12 @@ func httpQueueStatus(w http.ResponseWriter, r *http.Request) {
 		e = nil
 	}
 	if e != nil {
+		fmt.Printf("QueueStatus: %s\n", e.Error())
+
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(400)
-		if _, e := w.Write([]byte(`{"error": "error reading status"}`)); e != nil {
-			fmt.Printf("httpQueueStatus: " + e.Error())
+		if _, e := w.Write([]byte(fmt.Sprintf(`{"error": "%s"}`, e.Error()))); e != nil {
+			fmt.Printf("httpQueueStatus: %s\n", e.Error())
 		}
 		return
 	}
@@ -173,7 +175,7 @@ func httpQueueStatus(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	if e := enc.Encode(s); e != nil {
-		fmt.Printf("httpQueueStatus: " + e.Error())
+		fmt.Printf("httpQueueStatus: %s\n", e.Error())
 	}
 }
 
