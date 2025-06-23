@@ -12,7 +12,7 @@ var (
 
 func QueueAdd(args string) (id int64, e error) {
 	now := time.Now().Unix()
-	res, e := DB.Exec("insert into `queue` (`args`, `status`, `tm_added`) VALUES(?, ?, ?)", args, -1, now)
+	res, e := DB.Exec("insert into `queue` (`args`, `status`, `tm_added`, `output`) VALUES(?, ?, ?, '')", args, -1, now)
 	if e != nil {
 		return
 	}
